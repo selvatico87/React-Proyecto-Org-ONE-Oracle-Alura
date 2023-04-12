@@ -16,18 +16,7 @@ function App() {
     puesto: "Desarrollador"
   }])
 
-  //ternario --> condicion ? seMuestra : noSeMuestra
-  //condicion && seMuestra // es otra opcion
-
-  const cambiarMostrar=()=>{
-    actualizarMostrar(!mostrarFormulario)
-  }
-
-  const registrarColaborador =(colaborador)=>{
-    actualizarColaboradores([...colaboradores, colaborador])
-  }
-
-  const equipos =[
+  const [equipos, actualizarEquipos]=useState([
     {titulo:"Programación",
      colorPrimario: "#57C278",
      colorSecundario: "#D9F7E9", 
@@ -56,7 +45,32 @@ function App() {
     colorPrimario: "#FF8A29",
     colorSecundario: "#FFEEDF",
     },
-  ]
+  ])
+
+  //ternario --> condicion ? seMuestra : noSeMuestra
+  //condicion && seMuestra // es otra opcion
+
+  const cambiarMostrar=()=>{
+    actualizarMostrar(!mostrarFormulario)
+  }
+
+  const registrarColaborador =(colaborador)=>{
+    actualizarColaboradores([...colaboradores, colaborador])
+  }
+
+  const eliminarColaborador=(colaborador)=>{
+
+  }
+  const actualizarColorEquipos=(color,titulo)=>{
+    console.log("Actualizar: ",color,titulo)
+    const equiposActualizados= equipos.map((equipo)=>{
+      if(equipo.titulo === titulo){
+        equipo.colorPrimario = color
+      } 
+      return equipo
+    })
+    actualizarEquipos(equiposActualizados)
+  }
 
   return (
     <div>
@@ -66,7 +80,13 @@ function App() {
       {Header()} */}
       <MiOrg cambiarMostrar={cambiarMostrar}/>
       {
-        equipos.map((equipo)=><Equipo datos={equipo} key={equipo.titulo} colaboradores={colaboradores.filter(colaborador=>colaborador.equipo===equipo.titulo)}/>)
+        equipos.map((equipo)=><Equipo 
+          datos={equipo} 
+          key={equipo.titulo} 
+          colaboradores={colaboradores.filter(colaborador=>colaborador.equipo===equipo.titulo)}
+          eliminarColaborador={eliminarColaborador}
+          actualizarColorEquipos={actualizarColorEquipos}
+          />)
       }
       <Footer/>
     </div>
