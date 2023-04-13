@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { v4 as uuid } from 'uuid';
 import './App.css';
 import Header from './componentes/Header/Header';
 import Formulario from './componentes/Formulario/Formulario';
@@ -10,38 +11,87 @@ function App() {
   
   const [mostrarFormulario, actualizarMostrar] = useState(false);
   const [colaboradores,actualizarColaboradores]=useState([{
+    id: uuid(),
     equipo:"Front End",
     foto: "https://avatars.githubusercontent.com/u/101286521?s=400&v=4",
     nombre: "Ignacio González",
     puesto: "Desarrollador"
-  }])
+    },
+    {
+      id: uuid(),
+      equipo: "Front End",
+      foto: "https://github.com/harlandlohora.png",
+      nombre: "Harland Lohora",
+      puesto: "Instructor",
+      fav: true
+    },
+    {
+      id: uuid(),
+      equipo: "Programación",
+      foto: "https://github.com/genesysaluralatam.png",
+      nombre: "Genesys Rondón",
+      puesto: "Desarrolladora de software e instructora",
+      fav: false
+    },
+    {
+      id: uuid(),
+      equipo: "UX y Diseño",
+      foto: "https://github.com/JeanmarieAluraLatam.png",
+      nombre: "Jeanmarie Quijada",
+      puesto: "Instructora en Alura Latam",
+      fav: false
+    },
+    {
+      id: uuid(),
+      equipo: "Programación",
+      foto: "https://github.com/christianpva.png",
+      nombre: "Christian Velasco",
+      puesto: "Head de Alura e Instructor",
+      fav: false
+    },
+    {
+      id: uuid(),
+      equipo: "Innovación y Gestión",
+      foto: "https://github.com/JoseDarioGonzalezCha.png",
+      nombre: "Jose Gonzalez",
+      puesto: "Dev FullStack",
+      fav: false
+    }
+  ])
 
   const [equipos, actualizarEquipos]=useState([
-    {titulo:"Programación",
+    {id: uuid(),
+      titulo:"Programación",
      colorPrimario: "#57C278",
      colorSecundario: "#D9F7E9", 
     },
-    {titulo:"Front End",
+    {id: uuid(),
+      titulo:"Front End",
     colorPrimario: "#82CFFA",
     colorSecundario: "#E8F8FF",
     },
-    {titulo:"Data Science",
+    {id: uuid(),
+      titulo:"Data Science",
     colorPrimario: "#A6D157",
     colorSecundario: "#F0F8E2",
     },
-    {titulo:"Devops",
+    {id: uuid(),
+      titulo:"Devops",
     colorPrimario: "#E06B69",
     colorSecundario: "#FDE7E8",
     },
-    {titulo:"UX y Diseño",
+    {id: uuid(),
+      titulo:"UX y Diseño",
     colorPrimario: "#DB6EBF",
     colorSecundario: "#FAE9F5",
     },
-    {titulo:"Móvil",
+    {id: uuid(),
+      titulo:"Móvil",
     colorPrimario: "#FFBA05",
     colorSecundario: "#FFF5D9",
     },
-    {titulo:"Innovación y Gestión",
+    {id: uuid(),
+      titulo:"Innovación y Gestión",
     colorPrimario: "#FF8A29",
     colorSecundario: "#FFEEDF",
     },
@@ -58,13 +108,15 @@ function App() {
     actualizarColaboradores([...colaboradores, colaborador])
   }
 
-  const eliminarColaborador=(colaborador)=>{
-
+  const eliminarColaborador = (id) => {
+    console.log("Eliminar colaborador", id)
+    const nuevosColaboradores = colaboradores.filter((colaborador) => colaborador.id !== id)
+    actualizarColaboradores(nuevosColaboradores)
   }
-  const actualizarColorEquipos=(color,titulo)=>{
-    console.log("Actualizar: ",color,titulo)
+  const actualizarColor =(color,id)=>{
+    console.log("Actualizar: ",color,id)
     const equiposActualizados= equipos.map((equipo)=>{
-      if(equipo.titulo === titulo){
+      if(equipo.id === id){
         equipo.colorPrimario = color
       } 
       return equipo
@@ -72,22 +124,30 @@ function App() {
     actualizarEquipos(equiposActualizados)
   }
 
+  const crearEquipo = (nuevoEquipo)=>{
+    console.log(nuevoEquipo)
+    actualizarEquipos([...equipos,{...nuevoEquipo,id:uuid()}])
+  }
   return (
     <div>
-      <Header></Header>
-      {mostrarFormulario===true?<Formulario equipos={equipos.map((equipo)=>equipo.titulo)} registrarColaborador={registrarColaborador} />:<></>}
-      {/* <Header/>
-      {Header()} */}
+      <Header/>
+
+      {mostrarFormulario===true?<Formulario 
+        equipos={equipos.map((equipo)=>equipo.titulo)} 
+        registrarColaborador={registrarColaborador} 
+        crearEquipo={crearEquipo}/>:<></>}
+      
       <MiOrg cambiarMostrar={cambiarMostrar}/>
-      {
-        equipos.map((equipo)=><Equipo 
+      
+      {equipos.map((equipo)=><Equipo 
           datos={equipo} 
           key={equipo.titulo} 
           colaboradores={colaboradores.filter(colaborador=>colaborador.equipo===equipo.titulo)}
           eliminarColaborador={eliminarColaborador}
-          actualizarColorEquipos={actualizarColorEquipos}
+          actualizarColor={actualizarColor}
           />)
       }
+      
       <Footer/>
     </div>
   );
